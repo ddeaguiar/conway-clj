@@ -1,5 +1,7 @@
-(ns conway.core
-  (:gen-class))
+(ns conway.core)
+
+(def live 1)
+(def dead 0)
 
 (defn populate-board
   "Populates the board with the specified cells."
@@ -7,13 +9,13 @@
   (if (empty? living) board
                       (apply populate-board (assoc-in board
                                                       (first living)
-                                                      1)
+                                                      live)
                              (rest living))))
 
 (defn create-row
   "Creates an empty row of col columns."
   [col]
-  (vec (repeat col 0)))
+  (vec (repeat col dead)))
 
 (defn create-board
   "Creates an empty rows x col board."
@@ -35,19 +37,20 @@
         b        (bottom cell)
         bl       (bottom (left cell))
         l        (left cell)
-        gets #(get-in board % 0)]
+        gets #(get-in board % dead)]
     [(gets lt) (gets t) (gets tr) (gets r) (gets br) (gets b) (gets bl) (gets l)]))
 
 (defn cell-state
   "Returns cell state based on state of neighbors and cell state."
   [cell-state cell-neighbors]
   (let [count-live-neighbors (count (filter #(= 1 %) cell-neighbors))]
-    (cond (> 2 count-live-neighbors) 0
-          (and (= 1 cell-state) (>= 3 count-live-neighbors)) 1
-          (and (= 0 cell-state) (== 3 count-live-neighbors)) 1
-          :else 0)))
+    (cond (> 2 count-live-neighbors) dead
+          (and (= live cell-state) (>= 3 count-live-neighbors)) live
+          (and (= dead cell-state) (== 3 count-live-neighbors)) live
+          :else dead)))
 
 (defn tick
+  "Advances the board state by one tick (generation)."
   [board]
   (vec (map-indexed (fn [r-index row]
                        (vec (map-indexed #(cell-state %2
@@ -57,5 +60,6 @@
                      board)))
 
 (defn ticks
+  "Returns a lazy sequence of board states."
   [board]
   (cons board (lazy-seq (ticks (tick board)))))
