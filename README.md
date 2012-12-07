@@ -1,28 +1,32 @@
 # conway
 
-FIXME: description
+My implementation of Conway's game of life in clojure.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+lein deps
+
+It's assumed that midje is referenced in your .lein/profiles.clj
 
 ## Usage
 
-FIXME: explanation
+For now just running tests is supported.
 
-    $ java -jar conway-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
+   $ lein midge --lazytest
 
 ## Examples
 
-...
+    (def beehive [[0 0 0 0 0 0]
+                  [0 0 1 1 0 0]
+                  [0 1 0 0 1 0]
+                  [0 0 1 1 0 0]
+                  [0 0 0 0 0 0]])
 
-### Bugs
+    (take 3 (ticks beehive)) ;; => returns 3 generations of the boardstate seeded with the 'beehive' configuration.
+   
+### TODO
 
-...
+  Add a graphical component!
 
 ### Any Other Sections
 ### That You Think
