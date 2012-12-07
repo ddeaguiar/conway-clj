@@ -46,3 +46,16 @@
           (and (= 1 cell-state) (>= 3 count-live-neighbors)) 1
           (and (= 0 cell-state) (== 3 count-live-neighbors)) 1
           :else 0)))
+
+(defn tick
+  [board]
+  (vec (map-indexed (fn [r-index row]
+                       (vec (map-indexed #(cell-state %2
+                                                      (neighbors board
+                                                                 [r-index % %2]))
+                                         row)))
+                     board)))
+
+(defn ticks
+  [board]
+  (cons board (lazy-seq (ticks (tick board)))))

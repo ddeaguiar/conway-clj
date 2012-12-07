@@ -72,16 +72,14 @@
               [0 0 1 0 0]
               [0 0 0 0 0]])
 
-(defn next-gen
-  [board]
-  (map-indexed (fn [r-index row]
-                 (map-indexed #(cell-state %2 (neighbors board [r-index % %2]))
-                              row))
-               board))
+(def blinker-blinked [[0 0 0 0 0]
+                      [0 0 0 0 0]
+                      [0 1 1 1 0]
+                      [0 0 0 0 0]
+                      [0 0 0 0 0]])
 
-(fact "Blinker should 'blink' in next generation"
-  (next-gen blinker) => [[0 0 0 0 0]
-                         [0 0 0 0 0]
-                         [0 1 1 1 0]
-                         [0 0 0 0 0]
-                         [0 0 0 0 0]])
+(fact "Blinker should 'blink'."
+  (tick blinker) => blinker-blinked
+  (take 1 (ticks blinker)) => [blinker]
+  (take 2 (ticks blinker)) => [blinker blinker-blinked]
+  (take 3 (ticks blinker)) => [blinker blinker-blinked blinker])
