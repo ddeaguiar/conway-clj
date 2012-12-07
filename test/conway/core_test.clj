@@ -33,6 +33,15 @@
         gets #(get-in board % 0)]
     [(gets l) (gets t) (gets r) (gets b)]))
 
+(defn cell-state
+  "Returns cell state based on state of neighbors."
+  [n]
+  (let [live (count (filter #(= 1 %) n))]
+    (cond (> 2 live) 0
+          (>= 3 live) 1
+          :else 0)))
+
+
 (def four-x-four (partial populate-board (create-board 4 4)))
 
 (fact "A 4 column row."
@@ -73,3 +82,14 @@
               [0 1 0 0]
               [0 0 0 0]]
              [1 1]) => [1 1 1 1])
+
+(fact "Any cell with fewer than two live neighbors dies due to under population."
+  (cell-state [0 0 0 0]) => 0
+  (cell-state [1 0 0 0]) => 0)
+
+(fact "Any cell with two to three live neighbors lives on to the next generation."
+  (cell-state [1 1 0 0]) => 1
+  (cell-state [1 1 1 0]) => 1)
+
+(fact "Any cell with more than three live neighbors dies due to overcrowding"
+  (cell-state [1 1 1 1]) => 0)
