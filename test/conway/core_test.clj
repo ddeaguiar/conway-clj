@@ -6,6 +6,12 @@
 
 (def four-x-four (partial populate-board (create-board 4 4)))
 
+(fact "A live cell should be alive"
+  (live? live) => truthy)
+
+(fact "A dead cell should be dead"
+  (dead? dead) => truthy)
+
 (fact "A 4 column row."
   (create-row 4) => [0 0 0 0])
 

@@ -3,6 +3,9 @@
 (def live 1)
 (def dead 0)
 
+(defn live? [cs] (= live cs))
+(defn dead? [cs] (= dead cs))
+
 (defn populate-board
   "Populates the board with the specified cells."
   [board & living]
@@ -43,10 +46,10 @@
 (defn cell-state
   "Returns cell state based on state of neighbors and cell state."
   [cell-state cell-neighbors]
-  (let [count-live-neighbors (count (filter #(= 1 %) cell-neighbors))]
+  (let [count-live-neighbors (count (filter #(= live %) cell-neighbors))]
     (cond (> 2 count-live-neighbors) dead
-          (and (= live cell-state) (>= 3 count-live-neighbors)) live
-          (and (= dead cell-state) (== 3 count-live-neighbors)) live
+          (and (live? cell-state) (>= 3 count-live-neighbors)) live
+          (and (dead? cell-state) (== 3 count-live-neighbors)) live
           :else dead)))
 
 (defn tick
